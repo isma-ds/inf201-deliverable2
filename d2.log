@@ -1,0 +1,17 @@
+commit aa8354c301467fd0829c522cdd06ec850d0c0b03
+Author: Isma Sohail <your-email@example.com>
+Date:   Mon Oct 20 18:06:24 2025 +0200
+
+    Add README for Deliverable 2
+
+commit 373c79eb21ecd85c936041c7f73719eb80b43289
+Author: Isma Sohail <your-email@example.com>
+Date:   Mon Oct 20 18:00:36 2025 +0200
+
+    Add drawing.py for Deliverable 2
+
+commit a710541c6b233336031a07fc8140f1cfe3688bc0
+Author: isma-ds <isma.sohail@nmbu.no>
+Date:   Mon Oct 20 17:49:51 2025 +0200
+
+    Initial commit
