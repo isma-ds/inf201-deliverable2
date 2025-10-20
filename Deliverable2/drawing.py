@@ -1,11 +1,11 @@
 # drawing.py
 # INF201 – Deliverable 2 (Weeks 43–44)
 # Author: Isma Sohail
-# Source: Based on lecture 8 and instructor example
+# Source: Simplified version using matplotlib only (works on all systems)
 
 import matplotlib
-matplotlib.use("TkAgg")  # helps macOS show the window
-from turtleplotlib import Turtle
+
+matplotlib.use("TkAgg")  # ensures it runs on macOS
 import matplotlib.pyplot as plt
 import math
 
@@ -21,18 +21,17 @@ class Rectangle:
         return (self.ur[0] - self.ll[0]) * (self.ur[1] - self.ll[1])
 
     def info(self):
-        print(f"Rectangle(ll: {self.ll}, ur: {self.ur}), color={self.color}, lw={self.lw}")
+        print(
+            f"Rectangle(ll: {self.ll}, ur: {self.ur}), color={self.color}, lw={self.lw}"
+        )
 
-    def draw(self, turtle):
-        turtle.teleport(self.ll)
-        turtle.setheading(0)
-        turtle.color(self.color)
-        turtle.width(self.lw)
+    def draw(self, ax):
         width = self.ur[0] - self.ll[0]
         height = self.ur[1] - self.ll[1]
-        for d in [width, height, width, height]:
-            turtle.forward(d)
-            turtle.left(90)
+        rect = plt.Rectangle(
+            self.ll, width, height, fill=False, color=self.color, linewidth=self.lw
+        )
+        ax.add_patch(rect)
 
 
 class Triangle:
@@ -47,42 +46,32 @@ class Triangle:
     def info(self):
         print(f"Triangle{self.points}, color={self.color}, lw={self.lw}")
 
-    def draw(self, turtle):
-        turtle.color(self.color)
-        turtle.width(self.lw)
-        turtle.teleport(self.points[0])
-        for p in self.points[1:]:
-            turtle.goto(p)
-        turtle.goto(self.points[0])
+    def draw(self, ax):
+        x = [p[0] for p in self.points] + [self.points[0][0]]
+        y = [p[1] for p in self.points] + [self.points[0][1]]
+        ax.plot(x, y, color=self.color, linewidth=self.lw)
 
 
 class Circle:
     def __init__(self, center, radius, color="blue", linewidth=1):
-        assert radius >= 0, "Radius must be positive"
         self.ctr = center
         self.rad = radius
         self.color = color
         self.lw = linewidth
 
     def area(self):
-        return math.pi * self.rad ** 2
+        return math.pi * self.rad**2
 
     def info(self):
-        print(f"Circle(center: {self.ctr}, radius: {self.rad}), color={self.color}, lw={self.lw}")
+        print(
+            f"Circle(center: {self.ctr}, radius: {self.rad}), color={self.color}, lw={self.lw}"
+        )
 
-    def draw(self, turtle):
-        N = 180
-        seg_len = 2 * math.pi * self.rad / N
-        turn = 360 / N
-        turtle.color(self.color)
-        turtle.width(self.lw)
-        start = (self.ctr[0] + self.rad, self.ctr[1])
-        turtle.teleport(start)
-        turtle.setheading(90 + turn / 2)
-        for _ in range(N):
-            turtle.forward(seg_len)
-            turtle.left(turn)
-        turtle.goto(start)
+    def draw(self, ax):
+        circ = plt.Circle(
+            self.ctr, self.rad, fill=False, color=self.color, linewidth=self.lw
+        )
+        ax.add_patch(circ)
 
 
 if __name__ == "__main__":
@@ -92,14 +81,19 @@ if __name__ == "__main__":
         Rectangle((-100, -100), (0, 0), color="black", linewidth=3),
         Triangle((-50, -50), (90, -20), (0, 70), color="darkgreen"),
         Rectangle((-50, -150), (150, 50), color="black", linewidth=1),
-        Circle((50, -50), 100, color="purple", linewidth=2)
+        Circle((50, -50), 100, color="purple", linewidth=2),
     ]
 
     for s in shapes:
         s.info()
 
-    t = Turtle(interactive=False)
+    fig, ax = plt.subplots()
+    ax.set_aspect("equal", adjustable="box")
+    ax.set_xlim(-200, 300)
+    ax.set_ylim(-200, 300)
+    ax.set_title("INF201 – Deliverable 2 Shapes")
+
     for s in shapes:
-        s.draw(t)
+        s.draw(ax)
 
     plt.show()
